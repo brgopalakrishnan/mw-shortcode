@@ -1,0 +1,134 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0", 
+    "title": "Get a Short Code",    
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/api/urlshort/submit": {
+      "post":{
+        "tags": ["Get ShortCode"],     
+        "summary": "Create either an auto generated or a custom requested short code for a given URL.",
+        "parameters": [
+          {
+            "name": "originalURL",
+            "in": "body",
+            "description": "please enter an url and an optional desired alphanumeric short code of at least 4 characters.",
+            "schema": {
+              "$ref": "#/definitions/ShortCodeRequest"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "201": {
+            "description": "New short code is created",
+            "schema": {
+              "$ref": "#/definitions/ShortCodeResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/urlshort/{shortcode}": {
+      "parameters": [
+        {
+          "name": "shortcode",
+          "in": "path",
+          "required": true,
+          "description": "Please enter your Short Code to get to your site.",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": ["Get Website"],
+        "summary": "Open the Website for the given short code.",
+        "responses": {
+          "302": {
+            "description": "Redirect",
+            "schema": {
+              "$ref": "#/definitions/RedirectResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/urlshort/{shortcode}/stats": {
+      "parameters": [
+        {
+          "name": "shortcode",
+          "in": "path",
+          "required": true,
+          "description": "Please enter your short code to find the statistics.",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": ["Get Statistics"],
+        "summary": "Get Statstics for the given short code",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/CodeStatistics"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CodeStatistics": {     
+      "properties": {      
+        "RegisteredOn": {      
+          "type": "date",
+          "pattern": "/([0-9]{4})-(?:[0-9]{2})-([0-9]{2})T([0-9]{2}):(?:[0-9]{2}):(?:[0-9]{2})+(?:[0-9]{2}):(?:[0-9]{2})/",
+          "example": "2021-06-20T01:02:03+00:00"         
+        },
+        "LastAccessedOn": {
+          "type": "date",
+          "pattern": "/([0-9]{4})-(?:[0-9]{2})-([0-9]{2})T([0-9]{2}):(?:[0-9]{2}):(?:[0-9]{2})+(?:[0-9]{2}):(?:[0-9]{2})/",
+          "example": "2021-06-20T01:02:03+00:00"         
+        },        
+        "AccessCount": {
+          "type": "integer"
+        }       
+      }
+    },
+    "RedirectResponse":{
+      "properties": {      
+        "content": {      
+          "type": "string"
+        }
+      }
+    },
+    "ShortCodeResponse": {           
+      "properties": {                      
+        "shortcode": {
+          "type": "string"
+        }               
+      }
+    },
+    "ShortCodeRequest": {           
+      "properties": {                      
+        "originalURL": {
+          "type": "string",
+          "example": "https://www.google.com"         
+        },
+        "desiredShortCode": {
+          "type": "string",          
+          "example": "MySearchEngine"         
+        }               
+      }
+    }
+  }
+}

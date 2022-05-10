@@ -1,0 +1,6 @@
+{  
+  "test": {
+    "database": "mw_api_test",
+    "dialect": "postgres"
+  } 
+}
